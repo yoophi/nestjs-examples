@@ -1,33 +1,28 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { v4 as uuid } from 'uuid';
 import { CreateTodoDto } from './dto/create-todo';
+import { TodosService } from './todos.service';
 
 @Controller('todos')
 export class TodosController {
+  constructor(private readonly todosService: TodosService) {}
+
   @Get()
   getTodos() {
-    return [];
+    return this.todosService.getTodoList();
   }
 
   @Get(':todoId')
   getTodoDetail(@Param('todoId') todoId: string) {
-    return {
-      id: todoId,
-      title: 'sample todo',
-      completed: false,
-    };
+    return this.todosService.getTodoDetail(todoId);
   }
 
   @Post()
   createTodo(@Body() createTodoDto: CreateTodoDto) {
-    return {
-      id: uuid(),
-      ...createTodoDto,
-    };
+    return this.todosService.createTodo(createTodoDto);
   }
 
   @Delete(':todoId')
   deleteTodo(@Param('todoId') todoId: string) {
-    return {};
+    return this.todosService.deleteTodo(todoId);
   }
 }
